@@ -1,0 +1,13 @@
+{
+  "Port": "9880",
+  "DBUserName": "root",
+  "DBPassword": "qwer1234",
+  "DBIp": "localhost",
+  "DBPort": "3306",
+  "DBName": "busbak",
+
+  "LogAddr": ["http://localhost:9200/"],
+  "LogUsername": "",
+  "LogPass": "",
+  "LogIndex": "bus-bak-log"
+}
