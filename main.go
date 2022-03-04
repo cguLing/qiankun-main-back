@@ -1,7 +1,7 @@
-package bus_backend_go
+package main
 
 import (
-	"bus-backend-go/autoInit"
+	"bus-backend-go/autoinit"
 	"bus-backend-go/conf"
 	ginAutoRoute "bus-backend-go/route"
 	"bus-backend-go/utils"
@@ -16,7 +16,7 @@ import (
 
 func main() {
 	// TODO 使用es时放开 新的初始化方式
-	autoInit.InitTouch()
+	autoinit.InitTouch()
 	router := gin.New()
 	router.Use(gin.Recovery())
 	ginAutoRoute.RegisterRoute(router, utils.Log)

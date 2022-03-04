@@ -2,7 +2,7 @@ package service
 
 import (
 	"bus-backend-go/model"
-	repo "bus-backend-go/repo"
+	"bus-backend-go/repo"
 	"github.com/sirupsen/logrus"
 )
 

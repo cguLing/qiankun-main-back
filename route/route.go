@@ -44,3 +44,4 @@ func RegisterRoute(engine *gin.Engine, log *logrus.Logger) {
 
 	AutoRoute(engine, "/api/v1/system", controller.NewSystemController(log))
 
+}
