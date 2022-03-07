@@ -54,8 +54,8 @@ func AutoMigrateTables(db *gorm.DB) {
 	db.AutoMigrate(
 		&model.SuperAdmin{},
 		&model.ServiceType{},
-		&model.MicroList{},
-		&model.ServiceList{},
-		&model.EnshrineList{},
+		//&model.MicroList{},
+		//&model.ServiceList{},
+		//&model.EnshrineList{},
 		)
 }

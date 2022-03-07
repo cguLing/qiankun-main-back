@@ -3,8 +3,8 @@ package model
 
 type ServiceType struct {
 	GormModel
-	index uint `gorm:"type:int" json:"index" form:"index"` // 排序
-	className string `gorm:"type:varchar(128);not null" json:"className" form:"className"` // 分类名称
+	Index uint `gorm:"type:int" json:"index" form:"index"` // 排序
+	ClassName string `gorm:"type:varchar(128);not null;unique" json:"class_name" form:"class_name"` // 分类名称
 }
 
 type MicroList struct{
