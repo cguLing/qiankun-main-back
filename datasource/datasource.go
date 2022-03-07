@@ -1,6 +1,8 @@
 package datasource
 
 import (
+	"bus-backend-go/conf"
+	"bus-backend-go/model"
 	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -8,8 +10,6 @@ import (
 	"gorm.io/gorm/schema"
 	"log"
 	"os"
-	"bus-backend-go/conf"
-	"bus-backend-go/model"
 	"time"
 )
 
@@ -51,5 +51,11 @@ func init() {
 
 // 更新数据库表结构
 func AutoMigrateTables(db *gorm.DB) {
-	db.AutoMigrate(&model.SuperAdmin{})
+	db.AutoMigrate(
+		&model.SuperAdmin{},
+		&model.ServiceType{},
+		&model.MicroList{},
+		&model.ServiceList{},
+		&model.EnshrineList{},
+		)
 }
