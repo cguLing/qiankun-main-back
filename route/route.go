@@ -2,6 +2,7 @@ package route
 
 import (
 	"bus-backend-go/controller"
+	"bus-backend-go/keycloak"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -37,10 +38,17 @@ func Secure(c *gin.Context) {
 	// c.Header("Content-Security-Policy", "script-src 'self' https://cdnjs.cloudflare.com")
 }
 
+type headers struct {
+	Cookie        string `json:"Cookie"`
+	Authorization string `json:"Authorization"`
+}
+
 // 注册路由
 func RegisterRoute(engine *gin.Engine, log *logrus.Logger) {
 	engine.Use(Options)
 	engine.Use(Secure)
+
+	engine.Use(keycloak.Auth(keycloak.LoggedInCheck()))
 
 	AutoRoute(engine, "/api/v1/service", controller.NewServiceController(log))
 	AutoRoute(engine, "/api/v1/system", controller.NewSystemController(log))

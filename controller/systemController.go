@@ -19,7 +19,7 @@ func NewSystemController(log *logrus.Logger) *SystemController {
 }
 
 /**
- * @api GET /api/v1/system/superAdmin 查询用户是否为超级管理员
+ * @api GET /api/v1/system/userAdmin 查询用户是否为超级管理员
  * @apiGroup system
 
  * @apiRequest json
@@ -43,20 +43,20 @@ func NewSystemController(log *logrus.Logger) *SystemController {
  * @apiExample json
  * {"code":500, "msg":"error desc", "data": "error msg"}
  */
-func (controller SystemController) GetSuperAdmin(c *gin.Context) {
+func (controller SystemController) GetUserAdmin(c *gin.Context) {
 	// TODO 如果没有传入ldap，则默认查询发起请求的人自己，需要获取token
-	superAdmin := model.SuperAdmin{}
-	err := c.BindQuery(&superAdmin)
+	userAdmin := model.UserAdmin{}
+	err := c.BindQuery(&userAdmin)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": http.StatusInternalServerError,
-			"msg":  "get super admin error: missing ldap",
+			"msg":  "get user admin error: missing ldap",
 			"data": err,
 		})
 		return
 	}
 	// 进行查询
-	_, err = controller.systemService.FindSuperAdminByLdap(superAdmin.Ldap)
+	res, err := controller.systemService.FindUserAdminByLdap(userAdmin.Ldap)
 	if err != nil {
 		// 如果是因为没查到结果返回的错误
 		if err == gorm.ErrRecordNotFound{
@@ -70,7 +70,7 @@ func (controller SystemController) GetSuperAdmin(c *gin.Context) {
 		// 如果是其他错误
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": http.StatusInternalServerError,
-			"msg":  "get super admin error",
+			"msg":  "get user admin error",
 			"data": err,
 		})
 		return
@@ -79,14 +79,14 @@ func (controller SystemController) GetSuperAdmin(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": http.StatusOK,
 		"msg":  "success",
-		"data": 1,
+		"data": res,
 	})
 	return
 }
 
 
 /**
- * @api POST /api/v1/system/superAdmin 新增超级管理员
+ * @api POST /api/v1/system/userAdmin 新增超级管理员
  * @apiGroup system
 
  * @apiRequest json
@@ -109,12 +109,12 @@ func (controller SystemController) GetSuperAdmin(c *gin.Context) {
  * @apiExample json
  * {"code":500, "msg":"error desc", "data": "error msg"}
  */
-func (controller SystemController) PostSuperAdmin(c *gin.Context) {
-	var admin = model.SuperAdmin{}
+func (controller SystemController) PostUserAdmin(c *gin.Context) {
+	var admin = model.UserAdmin{}
 	if err := c.BindJSON(&admin); err != nil || admin.Ldap == "" {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": http.StatusInternalServerError,
-			"msg":  "get super admin error",
+			"msg":  "get user admin error",
 			"data": err,
 		})
 		return
@@ -122,11 +122,11 @@ func (controller SystemController) PostSuperAdmin(c *gin.Context) {
 	// TODO 从headers获取操作者
 	admin.Creator = "root"
 	// 去添加
-	_, err := controller.systemService.AddSuperAdmin(admin)
+	_, err := controller.systemService.AddUserAdmin(admin)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": http.StatusInternalServerError,
-			"msg":  "add super admin error",
+			"msg":  "add user admin error",
 			"data": err,
 		})
 		return
@@ -140,3 +140,32 @@ func (controller SystemController) PostSuperAdmin(c *gin.Context) {
 	return
 }
 
+
+func (controller SystemController) PutUserAdmin(c *gin.Context) {
+	var ua = model.UserAdmin{}
+	if err := c.BindJSON(&ua); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": http.StatusInternalServerError,
+			"msg":  "get user list post data error",
+			"data": err,
+		})
+		return
+	}
+	res, err := controller.systemService.UpdateUserAdmin(ua)
+	if err != nil {
+		controller.log.Errorf("put user list err: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": http.StatusInternalServerError,
+			"msg":  "put user list error",
+			"data": err.Error(),
+		})
+		return
+	}
+	// 正常查询到结果
+	c.JSON(http.StatusOK, gin.H{
+		"code": http.StatusOK,
+		"msg":  "success",
+		"data": res,
+	})
+	return
+}

@@ -32,4 +32,6 @@ type sysconfig struct {
 	LogUsername                      string   `json:"LogUsername"`
 	LogPass                          string   `json:"LogPass"`
 	LogIndex                         string   `json:"LogIndex"`
+
+	SsoUrl       string   `json:"sso_url"`
 }

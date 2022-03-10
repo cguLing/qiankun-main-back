@@ -7,8 +7,9 @@ import (
 )
 
 type SystemRepository interface {
-	FindSuperAdminByLdap(string) (model.SuperAdmin, error)
-	AddSuperAdmin(model.SuperAdmin) (model.SuperAdmin, error)
+	FindUserAdminByLdap(string) (model.UserAdmin, error)
+	AddUserAdmin(model.UserAdmin) (model.UserAdmin, error)
+	UpdateUserAdmin(ua model.UserAdmin) (uas model.UserAdmin, err error)
 }
 
 func NewSystemRepository() SystemRepository {
@@ -20,16 +21,17 @@ type systemRepository struct {
 }
 
 
-// 对数据库的直接curd操作
-// 根据ldap查询
-func (o systemRepository) FindSuperAdminByLdap(ldap string) (superAdmin model.SuperAdmin, err error) {
-	err = o.db.Where("ldap = ?", ldap).First(&superAdmin, model.SuperAdmin{}).Error
+func (o systemRepository) FindUserAdminByLdap(ldap string) (userAdmin model.UserAdmin, err error) {
+	err = o.db.Where("ldap = ?", ldap).FirstOrCreate(&userAdmin, model.UserAdmin{Ldap: ldap}).Error
 	return
 }
 
-// 新增超级管理员
-func (o systemRepository) AddSuperAdmin(admin model.SuperAdmin) (model.SuperAdmin, error) {
+func (o systemRepository) AddUserAdmin(admin model.UserAdmin) (model.UserAdmin, error) {
 	res := o.db.Create(&admin)
 	return admin, res.Error
 }
 
+func (o systemRepository) UpdateUserAdmin(ua model.UserAdmin) (model.UserAdmin, error){
+	err := o.db.Model(&model.UserAdmin{}).Where("`ldap` = ?", ua.Ldap).Updates(&ua).Update("`menu_way`", ua.MenuWay).Error
+	return ua, err
+}

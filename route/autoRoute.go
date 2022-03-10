@@ -1,7 +1,6 @@
 package route
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"reflect"
@@ -68,13 +67,22 @@ func AutoHand(s interface{}) gin.HandlerFunc {
 	}
 }
 
-func routeregexp(opt string, beforpath string) (bool, string) {
-	match := regexp.MustCompile(`^(` + opt + `+)(.*)$`).FindStringSubmatch(beforpath)
+//func routeregexp(opt string, beforpath string) (bool, string) {
+//	match := regexp.MustCompile(`^(` + opt + `+)(.*)$`).FindStringSubmatch(beforpath)
+//	if len(match) > 0 {
+//		for i := range match {
+//			fmt.Println(i, match[i])
+//		}
+//		return true, strings.ToLower(match[2])
+//	}
+//	return false, ""
+//}
+
+func routeregexp(strings string) (res bool, match []string) {
+	match = regexp.MustCompile(`^(Bearer\s)(.+)$`).FindStringSubmatch(strings)
 	if len(match) > 0 {
-		for i := range match {
-			fmt.Println(i, match[i])
-		}
-		return true, strings.ToLower(match[2])
+
+		return true, match
 	}
-	return false, ""
+	return false, match
 }

@@ -52,10 +52,10 @@ func init() {
 // 更新数据库表结构
 func AutoMigrateTables(db *gorm.DB) {
 	db.AutoMigrate(
-		&model.SuperAdmin{},
+		&model.UserAdmin{},
 		&model.ServiceType{},
-		//&model.MicroList{},
-		//&model.ServiceList{},
-		//&model.EnshrineList{},
+		&model.MicroList{},
+		&model.ServiceList{},
+		&model.EnshrineList{},
 		)
 }

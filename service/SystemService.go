@@ -7,9 +7,9 @@ import (
 )
 
 type SystemService interface {
-	// 超级管理员
-	FindSuperAdminByLdap(string) (model.SuperAdmin, error)
-	AddSuperAdmin(model.SuperAdmin) (model.SuperAdmin, error)
+	FindUserAdminByLdap(string) (model.UserAdmin, error)
+	AddUserAdmin(model.UserAdmin) (model.UserAdmin, error)
+	UpdateUserAdmin(ua model.UserAdmin) (uas model.UserAdmin, err error)
 }
 
 type systemService struct {
@@ -21,16 +21,19 @@ func NewSystemService(log *logrus.Logger) SystemService {
 	return &systemService{log: log, Systemrep: repo.NewSystemRepository()}
 }
 
-// 通过ldap获取super admin记录
-func (s systemService) FindSuperAdminByLdap(ldap string) (model.SuperAdmin, error) {
-	return s.Systemrep.FindSuperAdminByLdap(ldap)
+// 通过ldap获取记录，不存在则创建
+func (s systemService) FindUserAdminByLdap(ldap string) (model.UserAdmin, error) {
+	return s.Systemrep.FindUserAdminByLdap(ldap)
 }
 
-// 新增管理员
-func (s systemService) AddSuperAdmin(admin model.SuperAdmin) (model.SuperAdmin, error) {
+func (s systemService) AddUserAdmin(admin model.UserAdmin) (model.UserAdmin, error) {
 	// 检查是否已存在
-	if adminObj, err := s.Systemrep.FindSuperAdminByLdap(admin.Ldap); err == nil {
+	if adminObj, err := s.Systemrep.FindUserAdminByLdap(admin.Ldap); err == nil {
 		return adminObj, nil
 	}
-	return s.Systemrep.AddSuperAdmin(admin)
+	return s.Systemrep.AddUserAdmin(admin)
+}
+
+func (s systemService) UpdateUserAdmin(userAdmin model.UserAdmin)(model.UserAdmin, error){
+	return s.Systemrep.UpdateUserAdmin(userAdmin)
 }
