@@ -1,0 +1,15 @@
+{
+  "Port": "9880",
+  "DBUserName": "cyandevbak",
+  "DBPassword": "bWPbg7rNTbpu",
+  "DBIp": "public-dev01-db1-writer.pek01.zhidaoxuexiao.net",
+  "DBPort": "3306",
+  "DBName": "cyandevbak",
+
+  "LogAddr": ["http://10.108.160.151:9205/"],
+  "LogUsername": "elastic",
+  "LogPass": "D6%x%dxQNM",
+  "LogIndex": "cyan-dev-log",
+
+  "sso_url": "https://login.corp.zhidaoxuexiao.com/auth"
+}
